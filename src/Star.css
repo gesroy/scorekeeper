@@ -1,9 +1,0 @@
-.Star {
-  stroke: teal;
-  fill: none;
-  margin: 5px;
-}
-
-.Star.filled {
-  fill: teal;
-}
