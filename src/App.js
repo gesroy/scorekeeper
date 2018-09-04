@@ -1,19 +1,13 @@
 import React, { Component } from 'react'
 import './App.css'
-import Score from './Score.js'
 import Button from './Button.js'
-import ScoreUpdater from './ScoreUpdater'
 import ScoreBoard from './ScoreBoard'
+import PlayerSetup from './PlayerSetup'
 
 class App extends Component {
   state = {
-    users: [
-      { name: 'Laura', score: 0 },
-      { name: 'Lena', score: 0 },
-      { name: 'Jan', score: 0 },
-      { name: 'Isabella', score: 0 },
-      { name: 'Jojo', score: 0 },
-    ],
+    showStartScreen: true,
+    users: [],
   }
 
   updateScore = (index, value) => {
@@ -34,9 +28,29 @@ class App extends Component {
     })
   }
 
-  render() {
+  startGame = () => {
+    this.setState({
+      showStartScreen: false,
+    })
+  }
+  //Hier mit einer pfeilfunktion ist binden. damit wird es yu einer class property
+
+  renderStartScreen() {
     return (
-      <div className="App">
+      <div>
+        <h1>Start Screen</h1>
+        {this.state.users.map((user, i) => (
+          <div key={i}>{user.name}</div>
+        ))}
+        <PlayerSetup onSubmit={this.addPlayer} />
+        <Button onClick={this.startGame}>Play!</Button>
+      </div>
+    )
+  }
+
+  renderActiveGame() {
+    return (
+      <React.Fragment>
         {this.state.users.map((user, index) => (
           <ScoreBoard
             key={index}
@@ -45,8 +59,16 @@ class App extends Component {
             onUpdate={score => this.updateScore(index, score)}
           />
         ))}
-
         <Button onClick={this.resetScore}>Reset</Button>
+      </React.Fragment>
+    )
+  }
+
+  render() {
+    const { showStartScreen } = this.state
+    return (
+      <div className="App">
+        {showStartScreen ? this.renderStartScreen() : this.renderActiveGame()}
       </div>
     )
   }
