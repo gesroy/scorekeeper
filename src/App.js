@@ -3,28 +3,50 @@ import './App.css'
 import Score from './Score.js'
 import Button from './Button.js'
 import ScoreUpdater from './ScoreUpdater'
+import ScoreBoard from './ScoreBoard'
 
 class App extends Component {
-  state = { score: 0 }
+  state = {
+    users: [
+      { name: 'Laura', score: 0 },
+      { name: 'Lena', score: 0 },
+      { name: 'Jan', score: 0 },
+      { name: 'Isabella', score: 0 },
+      { name: 'Jojo', score: 0 },
+    ],
+  }
 
-  updateScore = score => {
-    this.setState({ score: score + this.state.score })
+  updateScore = (index, value) => {
+    const { users } = this.state
+    const user = users[index]
+    this.setState({
+      users: [
+        ...users.slice(0, index),
+        { ...user, score: user.score + value },
+        ...users.slice(index + 1),
+      ],
+    })
   }
 
   resetScore = () => {
     this.setState({
-      score: 0,
+      users: this.state.users.map(user => ({ ...user, score: 0 })),
     })
   }
 
   render() {
     return (
       <div className="App">
-        <Score value={this.state.score} />
-        <ScoreUpdater onClick={this.updateScore} />
-        <Button text="Reset" onClick={() => this.setState({ score: 0 })}>
-          Reset
-        </Button>
+        {this.state.users.map((user, index) => (
+          <ScoreBoard
+            key={index}
+            title={user.name}
+            score={user.score}
+            onUpdate={score => this.updateScore(index, score)}
+          />
+        ))}
+
+        <Button onClick={this.resetScore}>Reset</Button>
       </div>
     )
   }
