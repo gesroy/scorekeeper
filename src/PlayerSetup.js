@@ -12,8 +12,11 @@ export default class PlayerSetup extends Component {
   }
 
   checkForEnterButton = event => {
-    if (event.key === 'Enter') {
-      this.props.onSubmit(this.state.inputValue)
+    const { inputValue } = this.state
+    //es ginge auch && inputValue !=''){
+    if (event.key === 'Enter' && inputValue) {
+      this.props.onSubmit(inputValue)
+      this.setState({ inputValue: '' })
     }
   }
 
