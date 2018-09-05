@@ -1,29 +1,8 @@
 import React, { Component } from 'react'
 import './App.css'
-import Button from './Button'
-import ScoreBoard from './PlayerCard'
-import PlayerSetup from './PlayerInput'
-import styled from 'styled-components'
 import { save, load } from '../services'
-
-const StyledStartScreen = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`
-
-const StyledPlayer = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const StyledLittleButton = styled.div`
-  height: 30px;
-  width: 30px;
-  background-color: hotpink;
-`
+import StartScreen from './StartScreen'
+import GameScreen from './GameScreen'
 
 class App extends Component {
   state = {
@@ -44,7 +23,7 @@ class App extends Component {
       this.savePlayers
   }
 
-  savePlayers() {
+  savePlayers = () => {
     save('players', this.state.players)
   }
 
@@ -76,21 +55,7 @@ class App extends Component {
     )
   }
 
-  renderWarningOrButton() {
-    const { players } = this.state
-    return players.length ? (
-      <React.Fragment>
-        <Button onClick={this.startGame}>Play!</Button>
-        <StyledLittleButton onClick={() => this.deleteAllPlayers()}>
-          Delete players
-        </StyledLittleButton>
-      </React.Fragment>
-    ) : (
-      <div>Please enter at least one player</div>
-    )
-  }
-
-  deleteAllPlayers() {
+  deleteAllPlayers = () => {
     this.setState(
       {
         players: [],
@@ -99,18 +64,7 @@ class App extends Component {
     )
   }
 
-  renderPlayers() {
-    return this.state.players.map((player, i) => (
-      <StyledPlayer key={i}>
-        {player.name}
-        <StyledLittleButton onClick={() => this.deletePlayer(i)}>
-          x
-        </StyledLittleButton>
-      </StyledPlayer>
-    ))
-  }
-
-  deletePlayer(i) {
+  deletePlayer = i => {
     const { players } = this.state
     this.setState(
       {
@@ -120,37 +74,32 @@ class App extends Component {
     )
   }
 
-  renderStartScreen() {
-    return (
-      <StyledStartScreen>
-        <h1>Welcome!</h1>
-        {this.renderPlayers()}
-        <PlayerSetup onSubmit={this.addPlayer} />
-        {this.renderWarningOrButton()}
-      </StyledStartScreen>
-    )
-  }
-
   backToStart = () => {
     this.setState({
       showStartScreen: true,
     })
   }
 
-  renderActiveGame() {
+  runStartScreen() {
     return (
-      <React.Fragment>
-        {this.state.players.map((player, index) => (
-          <ScoreBoard
-            key={index}
-            title={player.name}
-            score={player.score}
-            onUpdate={score => this.updateScore(index, score)}
-          />
-        ))}
-        <Button onClick={this.resetScore}>Reset Scores</Button>
-        <Button onClick={this.backToStart}>Back</Button>
-      </React.Fragment>
+      <StartScreen
+        players={this.state.players}
+        onStartGame={this.startGame}
+        onDeleteAllPlayers={this.deleteAllPlayers}
+        onAddPlayer={this.addPlayer}
+        onDeletePlayer={this.deletePlayer}
+      />
+    )
+  }
+
+  runGameScreen() {
+    return (
+      <GameScreen
+        players={this.state.players}
+        onResetScore={this.resetScore}
+        onBackToStart={this.backToStart}
+        onUpdateScore={this.updateScore}
+      />
     )
   }
 
@@ -158,7 +107,7 @@ class App extends Component {
     const { showStartScreen } = this.state
     return (
       <div className="App">
-        {showStartScreen ? this.renderStartScreen() : this.renderActiveGame()}
+        {showStartScreen ? this.runStartScreen() : this.runGameScreen()}
       </div>
     )
   }

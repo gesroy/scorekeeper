@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ScoreUpdater from './ScoreUpdater'
+import PointButtonBar from './PointButtonBar'
 import styled from 'styled-components'
 
 const StyledHeader = styled.header`
@@ -9,25 +9,25 @@ const StyledHeader = styled.header`
   margin: 10px;
 `
 
-const StyledBoard = styled.section`
+const StyledCard = styled.section`
   border-radius: 10px;
   margin-top: 10px;
   background-color: #efefef;
   margin-bottom: 20px;
 `
 
-export default class ScoreBoard extends Component {
+export default class PlayerCard extends Component {
   render() {
     const { title, score, onUpdate } = this.props
 
     return (
-      <StyledBoard>
+      <StyledCard>
         <StyledHeader>
           <span>{title}</span>
           <span>{score}</span>
         </StyledHeader>
-        <ScoreUpdater onClick={onUpdate} />
-      </StyledBoard>
+        <PointButtonBar onClick={onUpdate} />
+      </StyledCard>
     )
   }
 }
