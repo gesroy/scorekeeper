@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import './App.css'
-import Button from './Button.js'
-import ScoreBoard from './ScoreBoard'
-import PlayerSetup from './PlayerSetup'
+import Button from './Button'
+import ScoreBoard from './PlayerCard'
+import PlayerSetup from './PlayerInput'
 import styled from 'styled-components'
+import { save, load } from '../services'
 
 const StyledStartScreen = styled.section`
   display: flex;
@@ -12,7 +13,7 @@ const StyledStartScreen = styled.section`
   flex-direction: column;
 `
 
-const StyledUser = styled.section`
+const StyledPlayer = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,29 +28,37 @@ const StyledLittleButton = styled.div`
 class App extends Component {
   state = {
     showStartScreen: true,
-    users: [],
+    players: load('players') || [],
   }
 
   updateScore = (index, value) => {
-    const { users } = this.state
-    const user = users[index]
+    const { players } = this.state
+    const player = players[index]
     this.setState({
-      users: [
-        ...users.slice(0, index),
-        { ...user, score: user.score + value },
-        ...users.slice(index + 1),
+      players: [
+        ...players.slice(0, index),
+        { ...player, score: player.score + value },
+        ...players.slice(index + 1),
       ],
-    })
+    }),
+      this.savePlayers
+  }
+
+  savePlayers() {
+    save('players', this.state.players)
   }
 
   resetScore = () => {
-    this.setState({
-      users: this.state.users.map(user => ({ ...user, score: 0 })),
-    })
+    this.setState(
+      {
+        players: this.state.players.map(player => ({ ...player, score: 0 })),
+      },
+      this.savePlayers
+    )
   }
 
   startGame = () => {
-    if (this.state.users.length > 0) {
+    if (this.state.players.length > 0) {
       this.setState({
         showStartScreen: false,
       })
@@ -58,55 +67,64 @@ class App extends Component {
   //Hier mit einer pfeilfunktion ist binden. damit wird es yu einer class property
 
   addPlayer = value => {
-    const { users } = this.state
-    this.setState({
-      users: [...users, { name: value, score: 0 }],
-    })
-  }
-
-  renderWarningOrButton() {
-    const { users } = this.state
-    return users.length ? (
-      <React.Fragment>
-        <Button onClick={this.startGame}>Play!</Button>
-        <StyledLittleButton onClick={() => this.deleteAllUsers()}>
-          Delete users
-        </StyledLittleButton>
-      </React.Fragment>
-    ) : (
-      <div>Please enter at least one user</div>
+    const { players } = this.state
+    this.setState(
+      {
+        players: [...players, { name: value, score: 0 }],
+      },
+      this.savePlayers
     )
   }
 
-  deleteAllUsers() {
-    this.setState({
-      users: [],
-    })
+  renderWarningOrButton() {
+    const { players } = this.state
+    return players.length ? (
+      <React.Fragment>
+        <Button onClick={this.startGame}>Play!</Button>
+        <StyledLittleButton onClick={() => this.deleteAllPlayers()}>
+          Delete players
+        </StyledLittleButton>
+      </React.Fragment>
+    ) : (
+      <div>Please enter at least one player</div>
+    )
   }
 
-  renderUsers() {
-    return this.state.users.map((user, i) => (
-      <StyledUser key={i}>
-        {user.name}
-        <StyledLittleButton onClick={() => this.deleteUser(i)}>
+  deleteAllPlayers() {
+    this.setState(
+      {
+        players: [],
+      },
+      this.savePlayers
+    )
+  }
+
+  renderPlayers() {
+    return this.state.players.map((player, i) => (
+      <StyledPlayer key={i}>
+        {player.name}
+        <StyledLittleButton onClick={() => this.deletePlayer(i)}>
           x
         </StyledLittleButton>
-      </StyledUser>
+      </StyledPlayer>
     ))
   }
 
-  deleteUser(i) {
-    const { users } = this.state
-    this.setState({
-      users: [...users.slice(0, i), ...users.slice(i + 1)],
-    })
+  deletePlayer(i) {
+    const { players } = this.state
+    this.setState(
+      {
+        players: [...players.slice(0, i), ...players.slice(i + 1)],
+      },
+      this.savePlayers
+    )
   }
 
   renderStartScreen() {
     return (
       <StyledStartScreen>
         <h1>Welcome!</h1>
-        {this.renderUsers()}
+        {this.renderPlayers()}
         <PlayerSetup onSubmit={this.addPlayer} />
         {this.renderWarningOrButton()}
       </StyledStartScreen>
@@ -122,11 +140,11 @@ class App extends Component {
   renderActiveGame() {
     return (
       <React.Fragment>
-        {this.state.users.map((user, index) => (
+        {this.state.players.map((player, index) => (
           <ScoreBoard
             key={index}
-            title={user.name}
-            score={user.score}
+            title={player.name}
+            score={player.score}
             onUpdate={score => this.updateScore(index, score)}
           />
         ))}

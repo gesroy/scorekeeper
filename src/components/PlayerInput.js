@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export default class PlayerSetup extends Component {
+export default class PlayerInput extends Component {
   state = {
     inputValue: '',
   }
