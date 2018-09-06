@@ -1,13 +1,7 @@
 import React, { Component } from 'react'
 import PointButtonBar from './PointButtonBar'
+import PlayerHeader from './PlayerHeader'
 import styled from 'styled-components'
-
-const StyledHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  font-size: 2em;
-  margin: 10px;
-`
 
 const StyledCard = styled.section`
   border-radius: 10px;
@@ -16,16 +10,13 @@ const StyledCard = styled.section`
   margin-bottom: 20px;
 `
 
-export default class PlayerCard extends Component {
+export default class EditCard extends Component {
   render() {
     const { title, score, onUpdate } = this.props
 
     return (
       <StyledCard>
-        <StyledHeader>
-          <span>{title}</span>
-          <span>{score}</span>
-        </StyledHeader>
+        <PlayerHeader title={title} score={score} />
         <PointButtonBar onClick={onUpdate} />
       </StyledCard>
     )

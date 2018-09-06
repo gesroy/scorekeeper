@@ -10,6 +10,7 @@ const StyledButton = styled.button`
   justify-content: center;
   font-size: 2em;
   border-radius: 10px;
+  margin: 5px;
   &:hover {
     background-color: white;
   }
