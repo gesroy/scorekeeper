@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import EditCard from './EditCard'
 import Button from './Button'
+import { Link } from 'react-router-dom'
 
 export default class GameScreen extends Component {
   render() {
@@ -12,11 +13,13 @@ export default class GameScreen extends Component {
             key={index}
             title={player.name}
             score={player.roundScore}
-            onUpdate={score => onUpdateScore(index, score)}
+            onUpdateScore={score => onUpdateScore(index, score)}
           />
         ))}
         <Button onClick={onResetScore}>Reset Scores</Button>
-        <Button onClick={onSave}>Save</Button>
+        <Link to="/summary">
+          <Button onClick={onSave}>Save</Button>
+        </Link>
       </React.Fragment>
     )
   }

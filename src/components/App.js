@@ -4,6 +4,7 @@ import { save, load } from '../services'
 import StartScreen from './StartScreen'
 import GameScreen from './GameScreen'
 import SummaryScreen from './SummaryScreen'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
   state = {
@@ -46,12 +47,17 @@ class App extends Component {
   }
 
   resetScores = () => {
-    this.setState(
-      {
-        players: this.state.players.map(player => ({ ...player, score: [0] })),
-      },
-      this.savePlayers
-    )
+    const { players } = this.state
+    this.setState({
+      players: players.map(
+        player => ({
+          ...player,
+          scores: [...player.scores, player.roundScore],
+          roundScore: 0,
+        }),
+        this.savePlayers
+      ),
+    })
   }
 
   startGame = () => {
@@ -63,11 +69,11 @@ class App extends Component {
   }
   //Hier mit einer pfeilfunktion ist binden. damit wird es yu einer class property
 
-  addPlayer = value => {
+  addPlayer = name => {
     const { players } = this.state
     this.setState(
       {
-        players: [...players, { value, scores: [0], roundScore: 0 }],
+        players: [...players, { name, scores: [0], roundScore: 0 }],
       },
       this.savePlayers
     )
@@ -116,7 +122,7 @@ class App extends Component {
     }
   }
 
-  runSummaryScreen() {
+  runSummaryScreen = () => {
     return (
       <SummaryScreen
         players={this.state.players}
@@ -127,7 +133,7 @@ class App extends Component {
     )
   }
 
-  runStartScreen() {
+  runStartScreen = () => {
     return (
       <StartScreen
         players={this.state.players}
@@ -139,12 +145,12 @@ class App extends Component {
     )
   }
 
-  runGameScreen() {
+  runGameScreen = () => {
     return (
       <GameScreen
         players={this.state.players}
         score={this.state.players.score}
-        onResetScore={this.resetScore}
+        onResetScore={this.resetScores}
         onBackToStart={this.backToStart}
         onUpdateScore={this.updateScore}
         onSave={this.saveRound}
@@ -153,8 +159,15 @@ class App extends Component {
   }
 
   render() {
-    const { showScreen } = this.state
-    return <div className="App">{this.renderScreen()}</div>
+    return (
+      <Router>
+        <div className="App">
+          <Route exact path="/" render={this.runStartScreen} />
+          <Route path="/summary" render={this.runSummaryScreen} />
+          <Route path="/game" render={this.runGameScreen} />
+        </div>
+      </Router>
+    )
   }
 }
 

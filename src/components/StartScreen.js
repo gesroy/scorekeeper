@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import Button from './Button'
 import PlayerInput from './PlayerInput'
+import { Link } from 'react-router-dom'
 
 const StyledStartScreen = styled.section`
   display: flex;
@@ -27,7 +28,9 @@ export default class StartScreen extends Component {
     const { players, onStartGame, onDeleteAllPlayers } = this.props
     return players.length ? (
       <React.Fragment>
-        <Button onClick={onStartGame}>Play!</Button>
+        <Link to="/summary">
+          <Button onClick={onStartGame}>Play!</Button>
+        </Link>
         <StyledLittleButton onClick={() => onDeleteAllPlayers()}>
           Delete players
         </StyledLittleButton>
