@@ -4,17 +4,21 @@ import Button from './Button'
 
 export default class SummaryScreen extends Component {
   render() {
-    const { players, rounds } = this.props
+    const { players, onAddRound, onBackToStart } = this.props
     return (
       <div>
-        {players.map(player => (
-          <SummaryCard
-            title={player.title}
-            score={player.score}
-            rounds={rounds}
-          />
+        <h1>Summary Screen</h1>
+        {players.map((player, i) => (
+          <SummaryCard key={i} title={player.name} scores={player.scores} />
         ))}
-        <Button>Add Round</Button>
+        <Button onClick={onBackToStart}>Back</Button>
+        {players.length ? (
+          <Button onClick={onAddRound}>Add Round</Button>
+        ) : (
+          <div>
+            <strong>Please add at least one player</strong>
+          </div>
+        )}
       </div>
     )
   }

@@ -3,34 +3,52 @@ import './App.css'
 import { save, load } from '../services'
 import StartScreen from './StartScreen'
 import GameScreen from './GameScreen'
+import SummaryScreen from './SummaryScreen'
 
 class App extends Component {
   state = {
-    showStartScreen: true,
+    showScreen: 'start', //or game or summary
     players: load('players') || [],
   }
 
   updateScore = (index, value) => {
     const { players } = this.state
     const player = players[index]
-    this.setState({
-      players: [
-        ...players.slice(0, index),
-        { ...player, score: player.score + value },
-        ...players.slice(index + 1),
-      ],
-    }),
+    this.setState(
+      {
+        players: [
+          ...players.slice(0, index),
+          { ...player, roundScore: player.roundScore + value },
+          ...players.slice(index + 1),
+        ],
+      },
       this.savePlayers
+    )
   }
 
-  savePlayers = () => {
+  saveRound = () => {
+    const { players } = this.state
+    this.setState(
+      {
+        showScreen: 'summary',
+        players: players.map(player => ({
+          ...player,
+          scores: [...player.scores, player.roundScore],
+          roundScore: 0,
+        })),
+      },
+      this.savePlayers
+    )
+  }
+
+  savePlayers() {
     save('players', this.state.players)
   }
 
-  resetScore = () => {
+  resetScores = () => {
     this.setState(
       {
-        players: this.state.players.map(player => ({ ...player, score: 0 })),
+        players: this.state.players.map(player => ({ ...player, score: [0] })),
       },
       this.savePlayers
     )
@@ -39,7 +57,7 @@ class App extends Component {
   startGame = () => {
     if (this.state.players.length > 0) {
       this.setState({
-        showStartScreen: false,
+        showScreen: 'summary',
       })
     }
   }
@@ -49,7 +67,7 @@ class App extends Component {
     const { players } = this.state
     this.setState(
       {
-        players: [...players, { name: value, score: 0 }],
+        players: [...players, { value, scores: [0], roundScore: 0 }],
       },
       this.savePlayers
     )
@@ -76,8 +94,37 @@ class App extends Component {
 
   backToStart = () => {
     this.setState({
-      showStartScreen: true,
+      showScreen: 'start',
     })
+  }
+
+  addRound = () => {
+    this.setState({
+      showScreen: 'game',
+    })
+  }
+
+  renderScreen() {
+    if (this.state.showScreen === 'start') {
+      return this.runStartScreen()
+    } else if (this.state.showScreen === 'summary') {
+      return this.runSummaryScreen()
+    } else if (this.state.showScreen === 'game') {
+      return this.runGameScreen()
+    } else {
+      return this.runStartScreen()
+    }
+  }
+
+  runSummaryScreen() {
+    return (
+      <SummaryScreen
+        players={this.state.players}
+        onUpdateScore={this.updateScore}
+        onAddRound={this.addRound}
+        onBackToStart={this.backToStart}
+      />
+    )
   }
 
   runStartScreen() {
@@ -96,20 +143,18 @@ class App extends Component {
     return (
       <GameScreen
         players={this.state.players}
+        score={this.state.players.score}
         onResetScore={this.resetScore}
         onBackToStart={this.backToStart}
         onUpdateScore={this.updateScore}
+        onSave={this.saveRound}
       />
     )
   }
 
   render() {
-    const { showStartScreen } = this.state
-    return (
-      <div className="App">
-        {showStartScreen ? this.runStartScreen() : this.runGameScreen()}
-      </div>
-    )
+    const { showScreen } = this.state
+    return <div className="App">{this.renderScreen()}</div>
   }
 }
 

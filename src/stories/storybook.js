@@ -103,11 +103,11 @@ storiesOf('App', module).add('where it all comes together', () => <App />)
 storiesOf('PlayerHeader', module).add('PlayerHeader', () => (
   <PlayerHeader title="Player 1" score={30} />
 ))
-storiesOf('RoundsBar', module).add('RoundsBar', () => (
+storiesOf('SummaryScreen/RoundsBar', module).add('RoundsBar', () => (
   <RoundsBar state={{ scores: [0, 30, 24] }} />
 ))
 
-storiesOf('SummaryCard', module).add('SummaryCard', () => (
+storiesOf('SummaryScreen/SummaryCard', module).add('SummaryCard', () => (
   <SummaryCard title="Player 1" score={3} players={[{ score: [0, 30, 24] }]} />
 ))
 storiesOf('SummaryScreen', module).add('SummaryScreen', () => (

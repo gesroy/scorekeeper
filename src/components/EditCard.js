@@ -12,12 +12,12 @@ const StyledCard = styled.section`
 
 export default class EditCard extends Component {
   render() {
-    const { title, score, onUpdate } = this.props
+    const { title, score, onUpdateScore } = this.props
 
     return (
       <StyledCard>
         <PlayerHeader title={title} score={score} />
-        <PointButtonBar onClick={onUpdate} />
+        <PointButtonBar onClick={onUpdateScore} />
       </StyledCard>
     )
   }

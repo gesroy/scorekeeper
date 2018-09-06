@@ -8,6 +8,10 @@ const StyledPointBar = styled.section`
   margin: 10px;
 `
 
+const FlexButton = styled(Button)`
+  flex: 0 1 auto;
+`
+
 export default class PointButtonBar extends Component {
   render() {
     const { onClick } = this.props
