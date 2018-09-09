@@ -7,16 +7,13 @@ export default class SummaryScreen extends Component {
   render() {
     const { players, onAddRound, onBackToStart } = this.props
     return (
-      <div>
-        <h1>Summary Screen</h1>
+      <React.Fragment>
         {players.map((player, i) => (
           <SummaryCard key={i} title={player.name} scores={player.scores} />
         ))}
-        <Link to="/">
-          <Button onClick={onBackToStart}>Back</Button>
-        </Link>
+
         {players.length ? (
-          <Link to="/game">
+          <Link to="/game" style={{ textDecoration: 'none' }}>
             <Button onClick={onAddRound}>Add Round</Button>
           </Link>
         ) : (
@@ -24,7 +21,10 @@ export default class SummaryScreen extends Component {
             <strong>Please add at least one player</strong>
           </div>
         )}
-      </div>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Button onClick={onBackToStart}>Back to Startscreen</Button>
+        </Link>
+      </React.Fragment>
     )
   }
 }

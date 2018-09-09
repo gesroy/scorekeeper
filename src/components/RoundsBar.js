@@ -6,27 +6,25 @@ const Scroller = styled.div`
   flex-wrap: nowrap;
   -webkit-overflow-scrolling: touch;
   overflow-x: scroll;
-  height: 32px;
+  height: 50px;
   background: #eee;
 `
 
-const StyledRoundsBar = styled.section`
+const StyledRoundScore = styled.div`
   display: flex;
-  flex-direction: row-reverse;
-  width: 300px;
-  background: lightblue;
+  justify-content: center;
   align-items: center;
-  border-radius: 10px;
-`
-const StyledRoundBox = styled.div`
-  height: 30px;
-  margin-left: 5px;
-  background-color: papayawhip;
+  padding: 0 10px;
+  font-size: 1.2em;
   margin: 5px;
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 1.25em;
+  &:first-child {
+    margin-left: auto;
+  }
+  &:not(:first-child) {
+    border-left: 1px solid #ddd;
+  }
 `
+
 export default class RoundsBar extends Component {
   scrollerRef = React.createRef()
 
@@ -39,13 +37,11 @@ export default class RoundsBar extends Component {
     let { scores } = this.props
     scores = scores.length ? scores : [0]
     return (
-      <StyledRoundsBar>
-        <Scroller innerRef={this.scrollerRef}>
-          {scores.map((score, i) => (
-            <StyledRoundBox key={i}>{score}</StyledRoundBox>
-          ))}
-        </Scroller>
-      </StyledRoundsBar>
+      <Scroller innerRef={this.scrollerRef}>
+        {scores.map((score, i) => (
+          <StyledRoundScore key={i}>{score}</StyledRoundScore>
+        ))}
+      </Scroller>
     )
   }
 }

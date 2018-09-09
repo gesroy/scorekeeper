@@ -17,10 +17,13 @@ const StyledPlayer = styled.section`
   justify-content: center;
 `
 
-const StyledLittleButton = styled.div`
+const StyledUnpopularButton = styled.div`
   height: 30px;
-  width: 30px;
-  background-color: hotpink;
+  border: 1px solid teal;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 15px;
+  padding: 5px;
 `
 
 export default class StartScreen extends Component {
@@ -28,12 +31,12 @@ export default class StartScreen extends Component {
     const { players, onStartGame, onDeleteAllPlayers } = this.props
     return players.length ? (
       <React.Fragment>
-        <Link to="/summary">
+        <Link to="/summary" style={{ textDecoration: 'none' }}>
           <Button onClick={onStartGame}>Play!</Button>
         </Link>
-        <StyledLittleButton onClick={() => onDeleteAllPlayers()}>
+        <StyledUnpopularButton onClick={() => onDeleteAllPlayers()}>
           Delete players
-        </StyledLittleButton>
+        </StyledUnpopularButton>
       </React.Fragment>
     ) : (
       <div>Please enter at least one player</div>
@@ -45,9 +48,9 @@ export default class StartScreen extends Component {
     return players.map((player, i) => (
       <StyledPlayer key={i}>
         {player.name}
-        <StyledLittleButton onClick={() => onDeletePlayer(i)}>
+        <StyledUnpopularButton onClick={() => onDeletePlayer(i)}>
           x
-        </StyledLittleButton>
+        </StyledUnpopularButton>
       </StyledPlayer>
     ))
   }

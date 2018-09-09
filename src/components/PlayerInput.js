@@ -1,4 +1,14 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
+
+const StyledInput = styled.input`
+  border: 1px solid #333;
+  height: 48px;
+  border-radius: 3px;
+  font-size: 1em;
+  margin: 20px 20px 20px 0;
+  border-radius: 10px;
+`
 
 export default class PlayerInput extends Component {
   state = {
@@ -22,16 +32,14 @@ export default class PlayerInput extends Component {
 
   render() {
     return (
-      <div>
-        <input
-          onChange={this.updateInputValue}
-          onKeyUp={this.checkForEnterButton}
-          placeholder="Player name"
-          autoFocus
-          value={this.state.inputValue}
-          type="text"
-        />
-      </div>
+      <StyledInput
+        onChange={this.updateInputValue}
+        onKeyUp={this.checkForEnterButton}
+        placeholder="Player name"
+        autoFocus
+        value={this.state.inputValue}
+        type="text"
+      />
     )
   }
 }

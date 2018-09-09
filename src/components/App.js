@@ -42,22 +42,37 @@ class App extends Component {
     )
   }
 
-  savePlayers() {
-    save('players', this.state.players)
+  resetScores = () => {
+    this.setState(
+      {
+        players: this.state.players.map(player => ({
+          ...player,
+          roundScore: 0,
+        })),
+      },
+      this.savePlayers
+    )
   }
 
-  resetScores = () => {
+  updateRoundScore = () => {
     const { players } = this.state
-    this.setState({
-      players: players.map(
-        player => ({
+    this.setState(
+      {
+        showScreen: 'game',
+        players: players.map(player => ({
           ...player,
-          scores: [...player.scores, player.roundScore],
+          scores: [...player.scores],
           roundScore: 0,
-        }),
-        this.savePlayers
-      ),
-    })
+        })),
+      },
+      this.savePlayers
+    )
+  }
+
+  //schreiben: on update round score fur den game screen, on update score ist fur den summaryscreen
+
+  savePlayers() {
+    save('players', this.state.players)
   }
 
   startGame = () => {
@@ -150,9 +165,10 @@ class App extends Component {
       <GameScreen
         players={this.state.players}
         score={this.state.players.score}
-        onResetScore={this.resetScores}
         onBackToStart={this.backToStart}
         onUpdateScore={this.updateScore}
+        onUpdateRoundScore={this.updateRoundScore}
+        onResetScores={this.resetScores}
         onSave={this.saveRound}
       />
     )

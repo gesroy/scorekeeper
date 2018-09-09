@@ -7,7 +7,6 @@ const StyledHeader = styled.header`
   font-size: 2em;
   height: 50px;
   background-color: lightcyan;
-  border-radius: 10px;
   padding: 10px;
   font-style: bold;
 `

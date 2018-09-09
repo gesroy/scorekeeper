@@ -4,10 +4,12 @@ import RoundsBar from './RoundsBar'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const StyledSummaryCard = styled.div`
-  margin-bottom: 15 px;
-  width: 300px;
-  margin: 10px;
+const StyledSummaryCard = styled.section`
+  margin-bottom: 15px;
+  width: 400px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-top: 15px;
 `
 
 export default class SummaryCard extends Component {
